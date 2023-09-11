@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "./authContext";
 
-export default function Inscription() {
+export default function Connexion() {
     const [values, setValues] = useState({
-        nom: "",
-        prenom: "",
         email: "",
         mdp: "",
     });
+
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleChange = (event) => {
         setValues({ ...values, [event.target.name]: event.target.value });
@@ -16,16 +20,18 @@ export default function Inscription() {
     const handleSubmit = (event) => {
         event.preventDefault();
         axios
-            .post("http://localhost:5000/inscription", values)
+            .post("http://localhost:5000/connexion", values)
             .then((res) => {
-                console.log("Inscription réussie");
-                // Redirigez l'utilisateur vers une page de confirmation ou de connexion
+                console.log("Connexion réussie");
+                login();
+                navigate("/tableau-de-bord");
             })
             .catch((err) => {
-                console.error("Erreur lors de l'inscription", err);
-                // Affichez un message d'erreur à l'utilisateur
+                console.error("Erreur lors de la connexion", err);
+                setError("Adresse e-mail ou mot de passe incorrect");
             });
     };
+
     return (
         <>
             <header>
@@ -40,31 +46,24 @@ export default function Inscription() {
                     </ul>
                 </nav>
             </header>
-            <main className="h-screen flex flex-col justify-center items-center">
-                <h1 className="text-blue-500 text-3xl font-bold my-10">Inscription</h1>
-                <form onSubmit={handleSubmit} method="post" className="bg-white p-8 shadow-md rounded-lg">
+            <main onSubmit={handleSubmit} className="h-screen flex flex-col justify-center items-center">
+                <h1 className="text-blue-500 text-3xl font-bold my-10">Connexion</h1>
+                <form method="post" className="bg-white p-8 shadow-md rounded-lg">
                     <div className="flex flex-col gap-4">
                         <div className="flex flex-col gap-2">
-                            <label htmlFor="nom">Nom</label>
-                            <input type="text" name="nom" className="border border-gray-300 rounded-lg p-2 w-72" onChange={handleChange} />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label htmlFor="prenom">Prénom</label>
-                            <input type="text" name="prenom" className="border border-gray-300 rounded-lg p-2 w-72" onChange={handleChange} />
-                        </div>
-                        <div className="flex flex-col gap-2">
                             <label htmlFor="email">Email</label>
-                            <input type="email" name="email" className="border border-gray-300 rounded-lg p-2 w-72" onChange={handleChange} />
+                            <input type="text" name="email" value={values.email} className="border border-gray-300 rounded-lg p-2 w-72" onChange={handleChange} />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <label htmlFor="password">Mot de passe</label>
-                            <input type="password" name="mdp" className="border border-gray-300 rounded-lg p-2 w-72" onChange={handleChange} />
+                            <label htmlFor="mdp">Mot de passe</label>
+                            <input type="password" name="mdp" value={values.mdp} className="border border-gray-300 rounded-lg p-2 w-72" onChange={handleChange} />
                         </div>
                     </div>
                     <div className="flex justify-center">
-                        <button className="rounded-lg bg-blue-800 py-2 mt-16 text-white transition-all delay-100 hover:bg-blue-900 w-40">S'inscrire</button>
+                        <button className="rounded-lg bg-blue-800 py-2 mt-16 text-white transition-all delay-100 hover:bg-blue-900 w-40">Se connecter</button>
                     </div>
                 </form>
+                {error && <p className="text-red-500 mt-4">{error}</p>}
             </main>
         </>
     )
