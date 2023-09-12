@@ -21,11 +21,9 @@ export default function Inscription() {
             .post("http://localhost:5000/inscription", values)
             .then((res) => {
                 console.log("Inscription réussie");
-                // Redirigez l'utilisateur vers une page de confirmation ou de connexion
             })
             .catch((err) => {
                 console.error("Erreur lors de l'inscription", err);
-                // Affichez un message d'erreur à l'utilisateur
             });
             navigate("/connexion");
     };

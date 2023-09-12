@@ -61,7 +61,7 @@ app.post("/inscription", (req, res) => {
 app.post("/connexion", (req, res) => {
     const { email, mdp } = req.body;
 
-    const query = "SELECT * FROM utilisateurs WHERE email = ?";
+    const query = "SELECT id, prenom, mdp FROM utilisateurs WHERE email = ?";
     db.query(query, [email], (err, results) => {
         if (err) {
             console.error(err);
@@ -81,7 +81,9 @@ app.post("/connexion", (req, res) => {
                 }
 
                 if (result) {
-                    res.status(200).json({ message: "Connexion réussie" });
+                    const userId = results[0].id;
+                    const prenom = results[0].prenom;
+                    res.status(200).json({ message: "Connexion réussie", userId, prenom });
                 } else {
                     res.status(401).json({ message: "Mot de passe incorrect" });
                 }
@@ -89,6 +91,22 @@ app.post("/connexion", (req, res) => {
         }
     });
 });
+
+app.get("/get-prenom", (req, res) => {
+    const { userId } = req.query;
+
+    const query = "SELECT prenom FROM utilisateurs WHERE id = ?";
+    db.query(query, [userId], (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ error: "Erreur lors de la récupération du prénom" });
+        } else {
+            const prenom = result[0].prenom;
+            res.json({ prenom });
+        }
+    });
+});
+
 
 app.listen(port, () => {
     console.log(`Serveur en ligne sur le port: ${port}`);

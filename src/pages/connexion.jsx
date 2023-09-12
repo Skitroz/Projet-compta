@@ -24,7 +24,7 @@ export default function Connexion() {
             .then((res) => {
                 console.log("Connexion réussie");
                 login();
-                navigate("/tableau-de-bord");
+                navigate("/tableau-de-bord", { state: { userId: res.data.userId } });
             })
             .catch((err) => {
                 console.error("Erreur lors de la connexion", err);

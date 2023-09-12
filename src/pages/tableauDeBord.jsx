@@ -1,35 +1,36 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from "./authContext";
-import { Navigate } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "./authContext";
+import { useLocation } from "react-router-dom";
 
 export default function TableauDeBord() {
+    const [prenom, setPrenom] = useState("");
     const { isLoggedIn } = useAuth();
-    const [prenom, setPrenom] = useState(""); // État pour stocker le prénom de l'utilisateur connecté
+    const navigate = useNavigate();
+    const location = useLocation();
+    const userId = location.state.userId;
 
     useEffect(() => {
-        if (isLoggedIn) {
-            // Effectuez une requête pour récupérer les informations de l'utilisateur connecté
-            axios
-                .get("/api/user")
-                .then((res) => {
-                    setPrenom(res.data.prenom); // Mettez à jour l'état avec le prénom récupéré
-                })
-                .catch((err) => {
-                    console.error("Erreur lors de la récupération du prénom", err);
-                    // Vous pouvez rediriger l'utilisateur vers une page d'erreur ou gérer l'erreur autrement
-                });
+        if (!isLoggedIn) {
+            navigate("/connexion");
+            return;
         }
-    }, [isLoggedIn]);
 
-    if (!isLoggedIn) {
-        return <Navigate to="/connexion" />;
-    }
+        const fetchPrenom = async () => {
+            try {
+                const response = await axios.get("http://localhost:5000/get-prenom");
+                setPrenom(response.data.prenom);
+            } catch (error) {
+                console.error("Erreur lors de la récupération du prénom", error);
+            }
+        };
+        fetchPrenom();
+    }, [isLoggedIn, navigate]);
 
     return (
         <div>
-            <h1>Bienvenue, {prenom}!</h1> {/* Affichez le prénom de l'utilisateur */}
-            {/* Autre contenu du tableau de bord */}
+            <h1>Bienvenue, {prenom} !</h1>
         </div>
     );
 }
