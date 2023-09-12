@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Inscription() {
+    const navigate = useNavigate();
     const [values, setValues] = useState({
         nom: "",
         prenom: "",
@@ -25,6 +27,7 @@ export default function Inscription() {
                 console.error("Erreur lors de l'inscription", err);
                 // Affichez un message d'erreur à l'utilisateur
             });
+            navigate("/connexion");
     };
     return (
         <>
@@ -46,19 +49,19 @@ export default function Inscription() {
                     <div className="flex flex-col gap-4">
                         <div className="flex flex-col gap-2">
                             <label htmlFor="nom">Nom</label>
-                            <input type="text" name="nom" className="border border-gray-300 rounded-lg p-2 w-72" onChange={handleChange} />
+                            <input type="text" name="nom" className="border border-gray-300 rounded-lg p-2 w-72" value={values.nom} onChange={handleChange} />
                         </div>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="prenom">Prénom</label>
-                            <input type="text" name="prenom" className="border border-gray-300 rounded-lg p-2 w-72" onChange={handleChange} />
+                            <input type="text" name="prenom" className="border border-gray-300 rounded-lg p-2 w-72" value={values.prenom} onChange={handleChange} />
                         </div>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="email">Email</label>
-                            <input type="email" name="email" className="border border-gray-300 rounded-lg p-2 w-72" onChange={handleChange} />
+                            <input type="email" name="email" className="border border-gray-300 rounded-lg p-2 w-72" value={values.email} onChange={handleChange} />
                         </div>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="password">Mot de passe</label>
-                            <input type="password" name="mdp" className="border border-gray-300 rounded-lg p-2 w-72" onChange={handleChange} />
+                            <input type="password" name="mdp" className="border border-gray-300 rounded-lg p-2 w-72" value={values.mdp} onChange={handleChange} />
                         </div>
                     </div>
                     <div className="flex justify-center">

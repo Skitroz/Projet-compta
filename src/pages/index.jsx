@@ -16,7 +16,7 @@ export default function Index() {
                         </div>
                     </ul>
                 </nav>
-                <img src={BG} alt="Image de fond pour la page d'accueil de ReactFinanz" className='w-screen h-[800px] brightness-[0.25]'/>
+                <img src={BG} alt="Image de fond pour la page d'accueil de ReactFinanz" className='w-screen h-[600px] brightness-[0.25]'/>
                 <div className="absolute top-[40%] transform -translate-y-[40%] ml-72 flex flex-col gap-1">
                     <div className='flex gap-3 text-blue-500 items-center text-2xl font-medium'>
                         <GiBigWave /> <h2>ReactFinanz</h2>
